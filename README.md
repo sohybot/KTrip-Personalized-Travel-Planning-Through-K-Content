@@ -6,6 +6,12 @@ KTrip은 사용자의 취향을 분석하여 최적의 K-콘텐츠 촬영지 여
 여행 중 마주치는 복잡한 한국 메뉴판을 OCR과 LLM을 결합한 기술로 분석해
 외국인 관광객도 현지인처럼 여행할 수 있도록 돕는 AI 기반 여행 서비스입니다.
 
+### 소개영상
+
+[![KTrip Demo Video](https://img.youtube.com/vi/HGWrB3Ykbjk/hqdefault.jpg)](https://youtu.be/HGWrB3Ykbjk)
+
+> Click the image to watch the full demo video.
+
 ---
 
 ## 기획 배경
@@ -30,6 +36,11 @@ KTrip은 사용자의 취향을 분석하여 최적의 K-콘텐츠 촬영지 여
 
 ## 주요 기능
 
+### 기능구현현영상 
+
+[![Feature Implementation Video](https://img.youtube.com/vi/hYW3b9-TB9M/hqdefault.jpg)](https://youtu.be/hYW3b9-TB9M)
+> Click the image to watch the full demo video.
+> 
 ### 1. 지능형 메뉴판 분석 (OCR + LLM)
 
 - Azure Document Intelligence를 활용한 메뉴판 OCR 및 좌표 데이터 추출
