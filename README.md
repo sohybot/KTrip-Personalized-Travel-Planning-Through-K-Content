@@ -1,4 +1,4 @@
-# KTrip: AI 기반 K-Culture 여행 큐레이션 플랫폼
+# KTrip: AI 기반 외국인 K-Culture 여행 큐레이션 서비스
 
 "화면 속 동경이 현실의 여정이 되는 곳, 개인화 AI 여행 비서 KTrip"
 
