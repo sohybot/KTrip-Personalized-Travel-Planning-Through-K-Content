@@ -13,10 +13,10 @@
     --bg3:     #181720;
     --surface: #1e1d28;
     --border:  rgba(255,255,255,0.07);
-    --accent:  #f97316;   /* warm orange — K-culture travel */
-    --accent2: #a78bfa;   /* purple — K-drama */
-    --accent3: #34d399;   /* green — safe/ok */
-    --accent4: #fb7185;   /* pink — K-pop */
+    --accent:  #f97316;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --accent4: #fb7185;
     --text:    #e8e4f0;
     --muted:   #6e6a80;
     --white:   #ffffff;
@@ -41,6 +41,39 @@
     pointer-events: none; z-index: 9999; opacity: 0.35;
   }
 
+  /* ── LANGUAGE TOGGLE ── */
+  .lang-toggle {
+    display: flex; align-items: center; gap: 0.5rem;
+    cursor: pointer; user-select: none;
+  }
+  .lang-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem; color: var(--muted);
+    letter-spacing: 0.08em; transition: color 0.2s;
+  }
+  .lang-label.active { color: var(--accent); }
+
+  .toggle-track {
+    width: 44px; height: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 11px; position: relative;
+    cursor: pointer; transition: border-color 0.2s;
+  }
+  .toggle-track:hover { border-color: var(--accent); }
+  .toggle-knob {
+    position: absolute; top: 2px; left: 2px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--muted);
+    transition: transform 0.25s cubic-bezier(.4,0,.2,1), background 0.2s;
+  }
+  body.lang-en .toggle-knob { transform: translateX(22px); background: var(--accent); }
+  body.lang-en .toggle-track { border-color: var(--accent); }
+
+  /* Text switching */
+  body.lang-en  [data-ko] { display: none !important; }
+  body:not(.lang-en) [data-en] { display: none !important; }
+
   /* ── NAV ── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -55,6 +88,7 @@
   .nav-links { display: flex; gap: 2.5rem; list-style: none; }
   .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; transition: color 0.2s; }
   .nav-links a:hover { color: var(--accent); }
+  .nav-right { display: flex; align-items: center; gap: 1.5rem; }
   .nav-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent); border: 1px solid var(--accent); padding: 0.3rem 0.8rem; border-radius: 2px; opacity: 0.8; }
 
   /* ── HERO ── */
@@ -65,19 +99,16 @@
     padding: 8rem 4rem 4rem; gap: 4rem;
     position: relative; overflow: hidden;
   }
-
   .hero-glow {
     position: absolute; width: 700px; height: 700px; border-radius: 50%;
     background: radial-gradient(circle, rgba(249,115,22,0.07) 0%, transparent 70%);
-    top: 40%; left: 40%; transform: translate(-50%,-50%);
-    pointer-events: none;
+    top: 40%; left: 40%; transform: translate(-50%,-50%); pointer-events: none;
   }
   .hero-glow2 {
     position: absolute; width: 400px; height: 400px; border-radius: 50%;
     background: radial-gradient(circle, rgba(167,139,250,0.06) 0%, transparent 70%);
     bottom: 5%; right: 5%; pointer-events: none;
   }
-
   .hero-label {
     font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent);
     letter-spacing: 0.2em; text-transform: uppercase;
@@ -85,20 +116,17 @@
     margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
   }
   .hero-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
-
   .hero-title {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(3.8rem, 7vw, 7rem); line-height: 0.92; color: var(--white);
     margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s 0.35s forwards;
   }
   .hero-title .outline { color: transparent; -webkit-text-stroke: 1.5px var(--accent); }
-
   .hero-sub {
     font-size: 1rem; color: var(--muted); max-width: 480px;
     margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.8s 0.5s forwards; line-height: 1.85;
   }
   .hero-sub strong { color: var(--text); font-weight: 500; }
-
   .hero-cta { display: flex; gap: 1rem; opacity: 0; animation: fadeUp 0.8s 0.65s forwards; }
 
   .btn-primary {
@@ -108,7 +136,6 @@
     letter-spacing: 0.05em; text-decoration: none; border-radius: 3px; transition: all 0.2s;
   }
   .btn-primary:hover { background: #fb923c; transform: translateY(-2px); }
-
   .btn-ghost {
     display: inline-flex; align-items: center; gap: 0.5rem;
     border: 1px solid var(--border); color: var(--text);
@@ -117,97 +144,57 @@
   }
   .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
 
-  /* ── HERO MOCKUP — K-travel app UI ── */
+  /* ── HERO MOCKUP ── */
   .hero-mockup { opacity: 0; animation: fadeIn 1s 0.8s forwards; }
-
   .mockup-card {
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; overflow: hidden;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    border-radius: 12px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.6);
   }
   .mockup-bar {
     background: var(--bg3); padding: 0.9rem 1.2rem;
-    display: flex; align-items: center; gap: 0.5rem;
-    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--border);
   }
   .dot { width: 10px; height: 10px; border-radius: 50%; }
   .dot-r { background: #f85149; } .dot-y { background: #e3b341; } .dot-g { background: #3fb950; }
   .mockup-title { margin-left: 0.8rem; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--muted); }
-
   .mockup-body { padding: 1.4rem; }
 
-  .trip-header {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
-  }
+  .trip-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
   .trip-title { font-size: 0.85rem; font-weight: 700; color: var(--white); }
-  .trip-badge {
-    font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
-    background: rgba(249,115,22,0.12); color: var(--accent);
-    border: 1px solid rgba(249,115,22,0.25); padding: 0.2rem 0.5rem; border-radius: 2px;
-  }
+  .trip-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; background: rgba(249,115,22,0.12); color: var(--accent); border: 1px solid rgba(249,115,22,0.25); padding: 0.2rem 0.5rem; border-radius: 2px; }
 
-  /* RAG pipeline mini viz */
-  .rag-steps {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 2px; margin-bottom: 1rem; background: var(--border);
-    border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
-  }
-  .rag-step {
-    background: var(--bg3); padding: 0.5rem 0.4rem; text-align: center;
-    font-size: 0.55rem; font-family: 'JetBrains Mono', monospace; color: var(--muted);
-  }
+  .rag-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; margin-bottom: 1rem; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .rag-step { background: var(--bg3); padding: 0.5rem 0.4rem; text-align: center; font-size: 0.55rem; font-family: 'JetBrains Mono', monospace; color: var(--muted); }
   .rag-step.active { background: rgba(249,115,22,0.1); color: var(--accent); }
   .rag-step .rs-icon { font-size: 0.9rem; display: block; margin-bottom: 0.15rem; }
 
-  /* content chip row */
   .content-row { display: flex; gap: 0.4rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
-  .content-chip {
-    font-size: 0.6rem; font-family: 'JetBrains Mono', monospace;
-    padding: 0.2rem 0.5rem; border-radius: 2px; border: 1px solid;
-  }
+  .content-chip { font-size: 0.6rem; font-family: 'JetBrains Mono', monospace; padding: 0.2rem 0.5rem; border-radius: 2px; border: 1px solid; }
   .chip-drama { background: rgba(167,139,250,0.1); color: var(--accent2); border-color: rgba(167,139,250,0.2); }
   .chip-kpop  { background: rgba(251,113,133,0.1); color: var(--accent4); border-color: rgba(251,113,133,0.2); }
-  .chip-food  { background: rgba(249,115,22,0.1);  color: var(--accent);  border-color: rgba(249,115,22,0.2);  }
+  .chip-food  { background: rgba(249,115,22,0.1);  color: var(--accent);  border-color: rgba(249,115,22,0.2); }
 
-  /* route card */
-  .route-card {
-    background: var(--bg2); border: 1px solid var(--border); border-radius: 6px;
-    padding: 0.9rem; margin-bottom: 0.7rem;
-  }
+  .route-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 0.9rem; margin-bottom: 0.7rem; }
   .route-card-title { font-size: 0.72rem; font-weight: 700; color: var(--white); margin-bottom: 0.4rem; }
   .route-stops { display: flex; align-items: center; gap: 0.3rem; flex-wrap: wrap; }
-  .route-stop {
-    font-size: 0.6rem; color: var(--muted); font-family: 'JetBrains Mono', monospace;
-    background: var(--bg3); border: 1px solid var(--border);
-    padding: 0.15rem 0.4rem; border-radius: 2px;
-  }
+  .route-stop { font-size: 0.6rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; background: var(--bg3); border: 1px solid var(--border); padding: 0.15rem 0.4rem; border-radius: 2px; }
   .route-arrow { font-size: 0.7rem; color: var(--accent); }
 
-  /* menu analysis row */
   .menu-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.8rem; }
-  .menu-item {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 4px; padding: 0.6rem;
-  }
+  .menu-item { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 0.6rem; }
   .menu-name { font-size: 0.72rem; font-weight: 700; color: var(--white); margin-bottom: 0.15rem; }
   .menu-desc { font-size: 0.6rem; color: var(--muted); line-height: 1.5; }
   .menu-tag { font-size: 0.55rem; font-family: 'JetBrains Mono', monospace; color: var(--accent3); margin-top: 0.2rem; }
 
   /* ── SECTION BASE ── */
   section { padding: 8rem 4rem; }
-
   .section-label {
     font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent);
     letter-spacing: 0.25em; text-transform: uppercase;
     display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.2rem;
   }
   .section-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
-
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.4rem, 4vw, 3.8rem);
-    color: var(--white); line-height: 1; letter-spacing: 0.02em; margin-bottom: 1rem;
-  }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 4vw, 3.8rem); color: var(--white); line-height: 1; letter-spacing: 0.02em; margin-bottom: 1rem; }
   .section-desc { color: var(--muted); font-size: 0.95rem; max-width: 560px; line-height: 1.8; }
 
   .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
@@ -215,132 +202,68 @@
 
   /* ── BACKGROUND ── */
   #background { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-
   .bg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; margin-top: 4rem; align-items: start; }
 
   .prob-list { display: flex; flex-direction: column; gap: 0; }
   .prob-item { display: flex; align-items: flex-start; gap: 1.2rem; position: relative; }
-  .prob-item:not(:last-child)::after {
-    content: ''; position: absolute; left: 19px; top: 40px;
-    width: 1px; height: 100%; background: var(--border);
-  }
-  .prob-icon {
-    width: 40px; height: 40px; border-radius: 50%;
-    background: var(--surface); border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1rem; flex-shrink: 0; position: relative; z-index: 1;
-  }
+  .prob-item:not(:last-child)::after { content: ''; position: absolute; left: 19px; top: 40px; width: 1px; height: 100%; background: var(--border); }
+  .prob-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; position: relative; z-index: 1; }
   .prob-content { padding: 0 0 2.5rem; }
   .prob-content h4 { font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
   .prob-content p  { font-size: 0.8rem; color: var(--muted); }
 
   .value-cards { display: flex; flex-direction: column; gap: 1rem; }
-  .value-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-left: 3px solid var(--accent); border-radius: 6px; padding: 1.2rem 1.4rem;
-    transition: transform 0.2s, border-left-color 0.2s;
-  }
+  .value-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 1.2rem 1.4rem; transition: transform 0.2s, border-left-color 0.2s; }
   .value-card:hover { transform: translateX(4px); border-left-color: var(--accent2); }
   .value-card h4 { font-size: 0.9rem; font-weight: 700; color: var(--white); margin-bottom: 0.4rem; }
   .value-card p  { font-size: 0.8rem; color: var(--muted); }
 
   /* ── FEATURES ── */
   #features { position: relative; }
-
   .features-header { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end; margin-bottom: 4rem; }
 
-  /* RAG pipeline visual */
-  .rag-pipeline {
-    display: grid; grid-template-columns: repeat(4,1fr);
-    gap: 1.5px; background: var(--border);
-    border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
-    margin-bottom: 2rem;
-  }
-  .rag-block {
-    background: var(--bg); padding: 2rem 1.4rem; position: relative;
-    transition: background 0.3s;
-  }
+  .rag-pipeline { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 2rem; }
+  .rag-block { background: var(--bg); padding: 2rem 1.4rem; position: relative; transition: background 0.3s; }
   .rag-block:hover { background: var(--surface); }
-  .rag-block-num {
-    font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; line-height: 1;
-    color: rgba(255,255,255,0.04); position: absolute; top: 0.5rem; right: 0.8rem;
-  }
-  .rag-block-step {
-    font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; color: var(--accent);
-    letter-spacing: 0.1em; margin-bottom: 0.6rem;
-  }
+  .rag-block-num { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; line-height: 1; color: rgba(255,255,255,0.04); position: absolute; top: 0.5rem; right: 0.8rem; }
+  .rag-block-step { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 0.6rem; }
   .rag-block h4 { font-size: 0.82rem; font-weight: 700; color: var(--white); margin-bottom: 0.4rem; }
   .rag-block p  { font-size: 0.72rem; color: var(--muted); line-height: 1.7; }
 
   .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
-
-  .feat-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; padding: 2rem; position: relative; overflow: hidden;
-    transition: border-color 0.3s, transform 0.3s;
-  }
-  .feat-card::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(249,115,22,0.04) 0%, transparent 60%);
-    opacity: 0; transition: opacity 0.3s;
-  }
+  .feat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 2rem; position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.3s; }
+  .feat-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(249,115,22,0.04) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s; }
   .feat-card:hover::before { opacity: 1; }
   .feat-card:hover { border-color: rgba(249,115,22,0.25); transform: translateY(-4px); }
-
   .feat-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
   .feat-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--white); margin-bottom: 0.6rem; }
   .feat-card p  { font-size: 0.8rem; color: var(--muted); line-height: 1.8; }
-
   .feat-detail { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 0.35rem; }
-  .feat-detail-item {
-    font-size: 0.72rem; color: var(--muted); display: flex; align-items: center;
-    gap: 0.5rem; font-family: 'JetBrains Mono', monospace;
-  }
+  .feat-detail-item { font-size: 0.72rem; color: var(--muted); display: flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; }
   .feat-detail-item::before { content: '→'; color: var(--accent); font-size: 0.7rem; }
 
   /* ── TECH ── */
   #tech { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-
   .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 4rem; }
-
   .challenge-list { display: flex; flex-direction: column; gap: 1.5rem; }
 
-  .ch-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; padding: 1.6rem; position: relative; overflow: hidden;
-    transition: border-color 0.3s, transform 0.3s;
-  }
+  .ch-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.6rem; position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.3s; }
   .ch-card:hover { border-color: rgba(249,115,22,0.2); transform: translateY(-2px); }
   .ch-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--accent); }
-
   .ch-num { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 0.5rem; }
   .ch-card h4 { font-size: 0.9rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; }
   .ch-problem { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.8rem; line-height: 1.7; }
   .ch-sol-label { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.35rem; }
   .ch-solution { font-size: 0.78rem; color: var(--text); line-height: 1.7; margin-bottom: 0.7rem; }
-  .ch-result {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent3);
-    background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.2);
-    padding: 0.2rem 0.6rem; border-radius: 2px;
-  }
+  .ch-result { display: inline-flex; align-items: center; gap: 0.4rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent3); background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.2); padding: 0.2rem 0.6rem; border-radius: 2px; }
   .ch-result::before { content: '✓'; }
 
-  /* model comparison table */
+  /* model box */
   .model-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 2rem; }
   .model-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--white); margin-bottom: 0.4rem; letter-spacing: 0.05em; }
-  .model-selected {
-    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--accent);
-    background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2);
-    display: inline-block; padding: 0.2rem 0.6rem; border-radius: 2px; margin-bottom: 1.4rem;
-  }
-
+  .model-selected { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--accent); background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2); display: inline-block; padding: 0.2rem 0.6rem; border-radius: 2px; margin-bottom: 1.4rem; }
   .model-table { width: 100%; border-collapse: collapse; margin-bottom: 1.4rem; }
-  .model-table th {
-    font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--muted);
-    text-align: left; padding: 0.6rem; border-bottom: 1px solid var(--border);
-    text-transform: uppercase; letter-spacing: 0.08em;
-  }
+  .model-table th { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--muted); text-align: left; padding: 0.6rem; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.08em; }
   .model-table td { font-size: 0.75rem; color: var(--text); padding: 0.7rem 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
   .model-table tr:last-child td { border-bottom: none; }
   .model-table tr.adopted td { color: var(--accent); }
@@ -355,27 +278,14 @@
 
   .arch-row { margin-top: 1.4rem; padding-top: 1.4rem; border-top: 1px solid var(--border); }
   .arch-row h4 { font-size: 0.78rem; font-weight: 700; color: var(--white); margin-bottom: 0.8rem; }
-  .arch-tier-row {
-    display: grid; grid-template-columns: auto 1fr; gap: 0.8rem 1.2rem; align-items: center;
-    padding: 0.7rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
+  .arch-tier-row { display: grid; grid-template-columns: auto 1fr; gap: 0.8rem 1.2rem; align-items: center; padding: 0.7rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
   .arch-tier-row:last-child { border-bottom: none; }
   .arch-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--accent2); white-space: nowrap; }
-  .arch-tech span {
-    display: inline-block; background: var(--bg3); border: 1px solid var(--border);
-    font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--muted);
-    padding: 0.12rem 0.4rem; border-radius: 2px; margin: 0.1rem 0.12rem 0.1rem 0;
-  }
+  .arch-tech span { display: inline-block; background: var(--bg3); border: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--muted); padding: 0.12rem 0.4rem; border-radius: 2px; margin: 0.1rem 0.12rem 0.1rem 0; }
 
   /* ── IMPACT ── */
   #impact { position: relative; }
-
-  .stats-row {
-    display: grid; grid-template-columns: repeat(4,1fr);
-    gap: 1.5px; background: var(--border);
-    border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
-    margin-top: 4rem;
-  }
+  .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 4rem; }
   .stat-cell { background: var(--bg); padding: 2.5rem 2rem; text-align: center; transition: background 0.3s; }
   .stat-cell:hover { background: var(--surface); }
   .stat-cell .big { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; color: var(--accent); line-height: 1; margin-bottom: 0.4rem; }
@@ -385,10 +295,7 @@
   .stat-cell .label { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
 
   .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem; }
-  .role-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; padding: 2rem; position: relative; overflow: hidden;
-  }
+  .role-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 2rem; position: relative; overflow: hidden; }
   .role-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
   .role-card h3 { font-size: 0.85rem; font-weight: 700; color: var(--white); margin-bottom: 1rem; }
   .role-item { display: flex; align-items: flex-start; gap: 0.7rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.8rem; color: var(--text); }
@@ -397,12 +304,10 @@
 
   /* ── ABOUT ── */
   #about { background: var(--bg2); border-top: 1px solid var(--border); }
-
   .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 4rem; }
   .about-name { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; color: var(--white); letter-spacing: 0.05em; line-height: 1; margin-bottom: 0.5rem; }
-  .about-role { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 2rem; }
+  .about-role-label { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 2rem; }
   .about-text { font-size: 0.9rem; color: var(--muted); line-height: 1.9; margin-bottom: 2rem; }
-
   .skill-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .chip { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; background: var(--bg); border: 1px solid var(--border); color: var(--muted); padding: 0.35rem 0.8rem; border-radius: 2px; transition: border-color 0.2s, color 0.2s; }
   .chip:hover { border-color: var(--accent); color: var(--accent); }
@@ -426,10 +331,22 @@
   /* ── ANIMATIONS ── */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--surface); border-radius: 3px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    #hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; }
+    .hero-mockup { display: none; }
+    section { padding: 5rem 1.5rem; }
+    .bg-grid, .tech-grid, .role-grid, .about-grid, .features-header { grid-template-columns: 1fr; gap: 2rem; }
+    .features-grid, .rag-pipeline { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    footer { flex-direction: column; text-align: center; padding: 2rem 1.5rem; gap: 1.5rem; }
+  }
 </style>
 </head>
 <body>
@@ -438,13 +355,30 @@
 <nav>
   <div class="nav-logo">K<span>Trip</span></div>
   <ul class="nav-links">
-    <li><a href="#background">기획배경</a></li>
-    <li><a href="#features">핵심기능</a></li>
-    <li><a href="#tech">기술챌린지</a></li>
-    <li><a href="#impact">임팩트</a></li>
-    <li><a href="#about">기획자</a></li>
+    <li><a href="#background">
+      <span data-ko>기획배경</span><span data-en>Context</span>
+    </a></li>
+    <li><a href="#features">
+      <span data-ko>핵심기능</span><span data-en>Features</span>
+    </a></li>
+    <li><a href="#tech">
+      <span data-ko>기술챌린지</span><span data-en>Challenges</span>
+    </a></li>
+    <li><a href="#impact">
+      <span data-ko>임팩트</span><span data-en>Impact</span>
+    </a></li>
+    <li><a href="#about">
+      <span data-ko>기획자</span><span data-en>About</span>
+    </a></li>
   </ul>
-  <div class="nav-tag">TravelTech AI</div>
+  <div class="nav-right">
+    <div class="nav-tag">TravelTech AI</div>
+    <div class="lang-toggle" id="langToggle" title="Switch Language">
+      <span class="lang-label active" id="labelKo">KO</span>
+      <div class="toggle-track"><div class="toggle-knob"></div></div>
+      <span class="lang-label" id="labelEn">EN</span>
+    </div>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -453,16 +387,27 @@
   <div class="hero-glow2"></div>
 
   <div>
-    <div class="hero-label">AI Product Portfolio · 박소현</div>
+    <div class="hero-label">
+      <span data-ko>AI Product Portfolio · 박소현</span>
+      <span data-en>AI Product Portfolio · Sohyeon Park</span>
+    </div>
     <h1 class="hero-title">
-      화면 속 동경이<br>현실의 여정이<br><span class="outline">되는 곳</span>
+      <span data-ko>화면 속 동경이<br>현실의 여정이<br><span class="outline">되는 곳</span></span>
+      <span data-en>WHERE CONTENT<br>BECOMES YOUR<br><span class="outline">JOURNEY</span></span>
     </h1>
     <p class="hero-sub">
-      K-콘텐츠 취향을 분석해 최적의 촬영지 여행 경로를 추천하고, <strong>OCR + LLM</strong>으로 복잡한 한국 메뉴판을 해석해 외국인 관광객도 현지인처럼 여행할 수 있도록 돕는 AI 기반 여행 서비스입니다.
+      <span data-ko>K-콘텐츠 취향을 분석해 최적의 촬영지 여행 경로를 추천하고, <strong>OCR + LLM</strong>으로 복잡한 한국 메뉴판을 해석해 외국인 관광객도 현지인처럼 여행할 수 있도록 돕는 AI 기반 여행 서비스입니다.</span>
+      <span data-en>An AI travel service that analyzes K-content preferences to recommend optimal filming-site itineraries, and uses <strong>OCR + LLM</strong> to decode Korean menus — so any traveler can explore Korea like a local.</span>
     </p>
     <div class="hero-cta">
-      <a href="#features" class="btn-primary">핵심 기능 보기 →</a>
-      <a href="#tech" class="btn-ghost">기술 챌린지</a>
+      <a href="#features" class="btn-primary">
+        <span data-ko>핵심 기능 보기 →</span>
+        <span data-en>View Features →</span>
+      </a>
+      <a href="#tech" class="btn-ghost">
+        <span data-ko>기술 챌린지</span>
+        <span data-en>Tech Challenges</span>
+      </a>
     </div>
   </div>
 
@@ -470,34 +415,25 @@
   <div class="hero-mockup">
     <div class="mockup-card">
       <div class="mockup-bar">
-        <div class="dot dot-r"></div>
-        <div class="dot dot-y"></div>
-        <div class="dot dot-g"></div>
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
         <span class="mockup-title">KTrip · AI K-CULTURE TRAVEL GUIDE</span>
       </div>
       <div class="mockup-body">
-
         <div class="trip-header">
           <div class="trip-title">Your Soul Route 🗺</div>
           <div class="trip-badge">RAG PROCESSING</div>
         </div>
-
-        <!-- RAG 4-step mini viz -->
         <div class="rag-steps">
           <div class="rag-step active"><span class="rs-icon">🔍</span>Search</div>
           <div class="rag-step active"><span class="rs-icon">📋</span>Survey</div>
           <div class="rag-step active"><span class="rs-icon">⭐</span>Recommend</div>
           <div class="rag-step"><span class="rs-icon">🗺</span>Maps</div>
         </div>
-
-        <!-- K-content preference chips -->
         <div class="content-row">
           <span class="content-chip chip-drama">🎭 K-Drama</span>
           <span class="content-chip chip-kpop">🎵 K-POP · BTS</span>
           <span class="content-chip chip-food">🍜 K-Food</span>
         </div>
-
-        <!-- Route card -->
         <div class="route-card">
           <div class="route-card-title">📍 Day 1 · Seoul Soul Route</div>
           <div class="route-stops">
@@ -508,8 +444,6 @@
             <span class="route-stop">홍대 Cafe Camp Tong</span>
           </div>
         </div>
-
-        <!-- Menu analysis preview -->
         <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--muted);margin-bottom:0.4rem;">OCR + LLM MENU ANALYSIS</div>
         <div class="menu-row">
           <div class="menu-item">
@@ -523,7 +457,6 @@
             <div class="menu-tag">🌶🌶 Spicy · ₩9,000</div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -532,39 +465,69 @@
 <!-- BACKGROUND -->
 <section id="background">
   <div class="section-label">01 · Background</div>
-  <h2 class="section-title">기획 배경 &<br>서비스 핵심 가치</h2>
+  <h2 class="section-title">
+    <span data-ko>기획 배경 &<br>서비스 핵심 가치</span>
+    <span data-en>Planning Context &<br>Core Values</span>
+  </h2>
 
   <div class="bg-grid">
     <div>
-      <p class="section-desc" style="margin-bottom:2rem;">K-미디어의 글로벌 확산으로 방한 수요는 급증했지만, 외국인 관광객은 여전히 언어 장벽과 정보 탐색 비용으로 불편을 겪습니다. 단순 정보 제공이 아닌 취향 기반 맞춤 가이드가 필요했습니다.</p>
+      <p class="section-desc" style="margin-bottom:2rem;">
+        <span data-ko>K-미디어의 글로벌 확산으로 방한 수요는 급증했지만, 외국인 관광객은 여전히 언어 장벽과 정보 탐색 비용으로 불편을 겪습니다. 단순 정보 제공이 아닌 취향 기반 맞춤 가이드가 필요했습니다.</span>
+        <span data-en>Global demand to visit Korea has surged with the spread of K-media, yet foreign tourists still face language barriers and high information-search costs. A preference-driven, personalized guide was needed — not just generic information.</span>
+      </p>
 
       <div class="prob-list">
         <div class="prob-item">
           <div class="prob-icon">📺</div>
           <div class="prob-content">
-            <h4>K-미디어 글로벌 확산</h4>
-            <p>K-POP·드라마·예능·영화 등 한류 콘텐츠가 실제 방한 관광 수요로 전환되는 중</p>
+            <h4>
+              <span data-ko>K-미디어 글로벌 확산</span>
+              <span data-en>K-Media Global Surge</span>
+            </h4>
+            <p>
+              <span data-ko>K-POP·드라마·예능·영화 등 한류 콘텐츠가 실제 방한 관광 수요로 전환되는 중</span>
+              <span data-en>K-POP, dramas, shows and films driving real-world inbound tourism demand</span>
+            </p>
           </div>
         </div>
         <div class="prob-item">
           <div class="prob-icon">🧳</div>
           <div class="prob-content">
-            <h4>자유여행(FIT) 증가</h4>
-            <p>패키지 여행 대신 개별 자유여행객이 늘며 맞춤형 정보 수요 급증</p>
+            <h4>
+              <span data-ko>자유여행(FIT) 증가</span>
+              <span data-en>Rise of FIT Travel</span>
+            </h4>
+            <p>
+              <span data-ko>패키지 여행 대신 개별 자유여행객이 늘며 맞춤형 정보 수요 급증</span>
+              <span data-en>Individual travelers replacing package tours, surging demand for personalized information</span>
+            </p>
           </div>
         </div>
         <div class="prob-item">
           <div class="prob-icon">🚧</div>
           <div class="prob-content">
-            <h4>언어 장벽 & 정보 탐색 비용</h4>
-            <p>한국 메뉴판·로컬 정보 접근의 어려움으로 여행 경험이 제한됨</p>
+            <h4>
+              <span data-ko>언어 장벽 & 정보 탐색 비용</span>
+              <span data-en>Language Barrier & Search Cost</span>
+            </h4>
+            <p>
+              <span data-ko>한국 메뉴판·로컬 정보 접근의 어려움으로 여행 경험이 제한됨</span>
+              <span data-en>Korean menus and local info remain inaccessible, limiting the travel experience</span>
+            </p>
           </div>
         </div>
         <div class="prob-item">
           <div class="prob-icon">💡</div>
           <div class="prob-content">
-            <h4>콘텐츠 취향 기반 가이드 부재</h4>
-            <p>단순 관광지 나열이 아닌 K-콘텐츠 스토리와 연결된 여행 설계 필요</p>
+            <h4>
+              <span data-ko>콘텐츠 취향 기반 가이드 부재</span>
+              <span data-en>Lack of Content-Driven Guidance</span>
+            </h4>
+            <p>
+              <span data-ko>단순 관광지 나열이 아닌 K-콘텐츠 스토리와 연결된 여행 설계 필요</span>
+              <span data-en>Need for itineraries tied to K-content stories, not just generic tourist spots</span>
+            </p>
           </div>
         </div>
       </div>
@@ -572,16 +535,34 @@
 
     <div class="value-cards reveal">
       <div class="value-card">
-        <h4>🎬 콘텐츠 중심 여행 경험</h4>
-        <p>장소가 아닌 스토리와 취향 중심으로 여행을 설계합니다. K-콘텐츠 촬영지·맛집·관광지 데이터를 RAG로 연결합니다.</p>
+        <h4>
+          <span data-ko>🎬 콘텐츠 중심 여행 경험</span>
+          <span data-en>🎬 Content-Led Travel Experience</span>
+        </h4>
+        <p>
+          <span data-ko>장소가 아닌 스토리와 취향 중심으로 여행을 설계합니다. K-콘텐츠 촬영지·맛집·관광지 데이터를 RAG로 연결합니다.</span>
+          <span data-en>Trips designed around story and taste — not just locations. K-content filming sites, restaurants, and attractions connected via RAG.</span>
+        </p>
       </div>
       <div class="value-card">
-        <h4>🔤 언어·문화 장벽 최소화</h4>
-        <p>OCR + LLM 기반 메뉴판 분석으로 단순 번역을 넘어 재료·맛·맵기 등 의미 정보를 자동 생성합니다.</p>
+        <h4>
+          <span data-ko>🔤 언어·문화 장벽 최소화</span>
+          <span data-en>🔤 Breaking Language & Culture Barriers</span>
+        </h4>
+        <p>
+          <span data-ko>OCR + LLM 기반 메뉴판 분석으로 단순 번역을 넘어 재료·맛·맵기 등 의미 정보를 자동 생성합니다.</span>
+          <span data-en>OCR + LLM menu analysis goes beyond translation — automatically generating ingredient, flavor, and spice-level descriptions.</span>
+        </p>
       </div>
       <div class="value-card">
-        <h4>📸 여행 데이터 기반 선순환 구조</h4>
-        <p>여행 로그 자동 기록 및 SNS 포스터 생성으로 사용자 데이터를 서비스 고도화에 활용합니다.</p>
+        <h4>
+          <span data-ko>📸 여행 데이터 기반 선순환 구조</span>
+          <span data-en>📸 Virtuous Data Loop</span>
+        </h4>
+        <p>
+          <span data-ko>여행 로그 자동 기록 및 SNS 포스터 생성으로 사용자 데이터를 서비스 고도화에 활용합니다.</span>
+          <span data-en>Auto-recorded travel logs and SNS poster generation turn user data into service improvement fuel.</span>
+        </p>
       </div>
     </div>
   </div>
@@ -592,71 +573,80 @@
   <div class="features-header">
     <div>
       <div class="section-label">02 · Core Features</div>
-      <h2 class="section-title">3가지<br>핵심 기능</h2>
+      <h2 class="section-title">
+        <span data-ko>3가지<br>핵심 기능</span>
+        <span data-en>3 Core<br>Features</span>
+      </h2>
     </div>
-    <p class="section-desc">RAG 기반 맞춤 여행 추천, OCR+LLM 메뉴판 분석, 여행 로그 & 소셜 포스터 생성. 3가지 기능이 유기적으로 연결되어 외국인도 현지인처럼 여행하는 경험을 만듭니다.</p>
+    <p class="section-desc">
+      <span data-ko>RAG 기반 맞춤 여행 추천, OCR+LLM 메뉴판 분석, 여행 로그 & 소셜 포스터 생성. 3가지 기능이 유기적으로 연결되어 외국인도 현지인처럼 여행하는 경험을 만듭니다.</span>
+      <span data-en>RAG-based personalized travel recommendations, OCR+LLM menu analysis, and travel log & social poster generation — three features working seamlessly to make any traveler feel like a local.</span>
+    </p>
   </div>
 
   <!-- RAG 4-step pipeline -->
-  <div class="section-label" style="margin-bottom:1rem;">RAG 4단계 파이프라인</div>
+  <div class="section-label" style="margin-bottom:1rem;">
+    <span data-ko>RAG 4단계 파이프라인</span>
+    <span data-en>RAG 4-Step Pipeline</span>
+  </div>
   <div class="rag-pipeline reveal">
     <div class="rag-block">
       <div class="rag-block-num">1</div>
       <div class="rag-block-step">STEP 01</div>
-      <h4>키워드 추출</h4>
-      <p>사용자 설문(Survey)에서 K-콘텐츠 취향·여행 스타일 분석</p>
+      <h4><span data-ko>키워드 추출</span><span data-en>Keyword Extraction</span></h4>
+      <p><span data-ko>사용자 설문(Survey)에서 K-콘텐츠 취향·여행 스타일 분석</span><span data-en>Analyzing K-content preferences and travel style from user survey</span></p>
     </div>
     <div class="rag-block">
       <div class="rag-block-num">2</div>
       <div class="rag-block-step">STEP 02</div>
-      <h4>DB 검색</h4>
-      <p>K-콘텐츠 촬영지·맛집·관광지 데이터베이스 벡터 검색</p>
+      <h4><span data-ko>DB 검색</span><span data-en>DB Search</span></h4>
+      <p><span data-ko>K-콘텐츠 촬영지·맛집·관광지 데이터베이스 벡터 검색</span><span data-en>Vector search across K-content filming sites, restaurants, and attractions</span></p>
     </div>
     <div class="rag-block">
       <div class="rag-block-num">3</div>
       <div class="rag-block-step">STEP 03</div>
-      <h4>관련도 점수 계산</h4>
-      <p>취향·동선·거리 기반 관련도 점수 계산 및 정렬</p>
+      <h4><span data-ko>관련도 점수 계산</span><span data-en>Relevance Scoring</span></h4>
+      <p><span data-ko>취향·동선·거리 기반 관련도 점수 계산 및 정렬</span><span data-en>Scoring and ranking results based on preference, route, and distance</span></p>
     </div>
     <div class="rag-block">
       <div class="rag-block-num">4</div>
       <div class="rag-block-step">STEP 04</div>
-      <h4>JSON 일정 생성</h4>
-      <p>개인화된 최적 여행 경로를 JSON 형식으로 구조화 출력</p>
+      <h4><span data-ko>JSON 일정 생성</span><span data-en>JSON Schedule Output</span></h4>
+      <p><span data-ko>개인화된 최적 여행 경로를 JSON 형식으로 구조화 출력</span><span data-en>Outputting the optimal personalized itinerary in structured JSON format</span></p>
     </div>
   </div>
 
   <div class="features-grid reveal" style="margin-top:2rem;">
     <div class="feat-card">
       <span class="feat-icon">🗺</span>
-      <h3>RAG 기반 맞춤 여행 추천</h3>
-      <p>사용자의 K-콘텐츠 취향과 여행 스타일을 분석해 개인화된 최적의 여행 경로와 동선을 자동 생성합니다.</p>
+      <h3><span data-ko>RAG 기반 맞춤 여행 추천</span><span data-en>RAG-Based Personalized Itinerary</span></h3>
+      <p><span data-ko>사용자의 K-콘텐츠 취향과 여행 스타일을 분석해 개인화된 최적의 여행 경로와 동선을 자동 생성합니다.</span><span data-en>Analyzes K-content preferences and travel style to automatically generate optimized, personalized travel routes and itineraries.</span></p>
       <div class="feat-detail">
-        <div class="feat-detail-item">K-콘텐츠 취향 기반 장소 추천</div>
-        <div class="feat-detail-item">RAG 4단계 파이프라인</div>
-        <div class="feat-detail-item">Personalized Itinerary 자동 생성</div>
+        <div class="feat-detail-item"><span data-ko>K-콘텐츠 취향 기반 장소 추천</span><span data-en>K-content preference-based place recommendations</span></div>
+        <div class="feat-detail-item"><span data-ko>RAG 4단계 파이프라인</span><span data-en>RAG 4-step pipeline</span></div>
+        <div class="feat-detail-item"><span data-ko>Personalized Itinerary 자동 생성</span><span data-en>Automated personalized itinerary generation</span></div>
       </div>
     </div>
 
     <div class="feat-card">
       <span class="feat-icon">📋</span>
-      <h3>지능형 메뉴판 분석</h3>
-      <p>Azure Document Intelligence로 메뉴판을 OCR 처리하고, GPT 모델로 파편화된 텍스트를 의미 단위로 재구성해 재료·맛·맵기 정보까지 자동 생성합니다.</p>
+      <h3><span data-ko>지능형 메뉴판 분석</span><span data-en>Intelligent Menu Analysis</span></h3>
+      <p><span data-ko>Azure Document Intelligence로 메뉴판을 OCR 처리하고, GPT 모델로 파편화된 텍스트를 의미 단위로 재구성해 재료·맛·맵기 정보까지 자동 생성합니다.</span><span data-en>OCR-processes menus with Azure Document Intelligence, then uses GPT to reconstruct fragmented text into meaningful units — auto-generating ingredient, flavor, and spice info.</span></p>
       <div class="feat-detail">
-        <div class="feat-detail-item">OCR + LLM 통합 파이프라인</div>
-        <div class="feat-detail-item">좌표 기반 자간 병합 처리</div>
-        <div class="feat-detail-item">재료·맛·맵기 의미 정보 생성</div>
+        <div class="feat-detail-item"><span data-ko>OCR + LLM 통합 파이프라인</span><span data-en>Integrated OCR + LLM pipeline</span></div>
+        <div class="feat-detail-item"><span data-ko>좌표 기반 자간 병합 처리</span><span data-en>Coordinate-based character spacing merge</span></div>
+        <div class="feat-detail-item"><span data-ko>재료·맛·맵기 의미 정보 생성</span><span data-en>Ingredient, flavor & spice info generation</span></div>
       </div>
     </div>
 
     <div class="feat-card">
       <span class="feat-icon">📸</span>
-      <h3>여행 로그 & 소셜 포스터</h3>
-      <p>여행 중 방문 장소와 이동 경로를 자동으로 감지·기록하고, 한국적 감성의 디자인 템플릿으로 SNS 공유용 여행 포스터를 즉시 생성합니다.</p>
+      <h3><span data-ko>여행 로그 & 소셜 포스터</span><span data-en>Travel Log & Social Poster</span></h3>
+      <p><span data-ko>여행 중 방문 장소와 이동 경로를 자동으로 감지·기록하고, 한국적 감성의 디자인 템플릿으로 SNS 공유용 여행 포스터를 즉시 생성합니다.</span><span data-en>Automatically detects and records visited locations and routes, then instantly generates SNS-ready travel posters using Korean-aesthetic design templates.</span></p>
       <div class="feat-detail">
-        <div class="feat-detail-item">방문 장소 자동 감지 및 기록</div>
-        <div class="feat-detail-item">한국적 감성 디자인 템플릿</div>
-        <div class="feat-detail-item">SNS 최적화 포스터 자동 생성</div>
+        <div class="feat-detail-item"><span data-ko>방문 장소 자동 감지 및 기록</span><span data-en>Auto-detection and logging of visited places</span></div>
+        <div class="feat-detail-item"><span data-ko>한국적 감성 디자인 템플릿</span><span data-en>Korean-aesthetic design templates</span></div>
+        <div class="feat-detail-item"><span data-ko>SNS 최적화 포스터 자동 생성</span><span data-en>SNS-optimized poster auto-generation</span></div>
       </div>
     </div>
   </div>
@@ -665,62 +655,80 @@
 <!-- TECH -->
 <section id="tech">
   <div class="section-label">03 · Technical Challenges</div>
-  <h2 class="section-title">기술 챌린지 &<br>해결 전략</h2>
-  <p class="section-desc">2가지 핵심 기술 문제를 직접 정의하고, 좌표 기반 알고리즘과 JSON 구조화로 해결하여 OCR 인식률과 RAG 추천 정확도를 동시에 끌어올렸습니다.</p>
+  <h2 class="section-title">
+    <span data-ko>기술 챌린지 &<br>해결 전략</span>
+    <span data-en>Technical Challenges &<br>Solution Strategy</span>
+  </h2>
+  <p class="section-desc">
+    <span data-ko>2가지 핵심 기술 문제를 직접 정의하고, 좌표 기반 알고리즘과 JSON 구조화로 해결하여 OCR 인식률과 RAG 추천 정확도를 동시에 끌어올렸습니다.</span>
+    <span data-en>Directly defined and solved two core technical problems using coordinate-based algorithms and JSON structuring — simultaneously improving OCR recognition and RAG recommendation accuracy.</span>
+  </p>
 
   <div class="tech-grid reveal">
     <div class="challenge-list">
       <div class="ch-card">
         <div class="ch-num">CHALLENGE 01</div>
-        <h4>OCR 자간 인식 문제</h4>
-        <p class="ch-problem">메뉴판 디자인 특성상 OCR이 "우 동", "김 치"처럼 단어를 분리 인식하여 번역 품질과 메뉴 인식 정확도가 저하되었습니다.</p>
-        <div class="ch-sol-label">해결 전략</div>
-        <p class="ch-solution">텍스트의 Y좌표 근접도를 활용해 같은 행의 글자를 병합(Y좌표 근접도 병합). 공간 좌표 정보를 LLM 프롬프트에 주입하여 의미 단위로 재구성했습니다.</p>
-        <span class="ch-result">의미 단위 재구성으로 인식률 개선</span>
+        <h4><span data-ko>OCR 자간 인식 문제</span><span data-en>OCR Character Spacing Issue</span></h4>
+        <p class="ch-problem">
+          <span data-ko>메뉴판 디자인 특성상 OCR이 "우 동", "김 치"처럼 단어를 분리 인식하여 번역 품질과 메뉴 인식 정확도가 저하되었습니다.</span>
+          <span data-en>Due to menu design characteristics, OCR split words like "우 동" and "김 치" into separate tokens, degrading translation quality and menu recognition accuracy.</span>
+        </p>
+        <div class="ch-sol-label"><span data-ko>해결 전략</span><span data-en>Solution Strategy</span></div>
+        <p class="ch-solution">
+          <span data-ko>텍스트의 Y좌표 근접도를 활용해 같은 행의 글자를 병합(Y좌표 근접도 병합). 공간 좌표 정보를 LLM 프롬프트에 주입하여 의미 단위로 재구성했습니다.</span>
+          <span data-en>Used Y-coordinate proximity to merge characters in the same row. Injected spatial coordinate data into the LLM prompt to reconstruct text into meaningful units.</span>
+        </p>
+        <span class="ch-result"><span data-ko>의미 단위 재구성으로 인식률 개선</span><span data-en>Recognition improved via semantic unit reconstruction</span></span>
       </div>
 
       <div class="ch-card">
         <div class="ch-num">CHALLENGE 02</div>
-        <h4>RAG 컨텍스트 구조화</h4>
-        <p class="ch-problem">초기에 단순 텍스트로 장소 정보를 전달했더니 LLM이 위치 정보나 콘텐츠 연관성을 정확히 파악하지 못해 추천 정확도가 하락했습니다.</p>
-        <div class="ch-sol-label">해결 전략</div>
-        <p class="ch-solution">장소명·관련 콘텐츠·좌표·특징을 Key-Value 기반의 구조화된 JSON 컨텍스트로 변환하여 LLM이 정확한 정보 기반으로 동선을 설계하도록 개선했습니다.</p>
-        <span class="ch-result">LLM 정보 연관성 파악 능력 극대화</span>
+        <h4><span data-ko>RAG 컨텍스트 구조화</span><span data-en>RAG Context Structuring</span></h4>
+        <p class="ch-problem">
+          <span data-ko>초기에 단순 텍스트로 장소 정보를 전달했더니 LLM이 위치 정보나 콘텐츠 연관성을 정확히 파악하지 못해 추천 정확도가 하락했습니다.</span>
+          <span data-en>Initially passing location info as plain text caused the LLM to misidentify location data and content relevance, lowering recommendation accuracy.</span>
+        </p>
+        <div class="ch-sol-label"><span data-ko>해결 전략</span><span data-en>Solution Strategy</span></div>
+        <p class="ch-solution">
+          <span data-ko>장소명·관련 콘텐츠·좌표·특징을 Key-Value 기반의 구조화된 JSON 컨텍스트로 변환하여 LLM이 정확한 정보 기반으로 동선을 설계하도록 개선했습니다.</span>
+          <span data-en>Converted place names, related content, coordinates, and features into structured Key-Value JSON context — enabling the LLM to design accurate, information-grounded itineraries.</span>
+        </p>
+        <span class="ch-result"><span data-ko>LLM 정보 연관성 파악 능력 극대화</span><span data-en>Maximized LLM information relevance comprehension</span></span>
       </div>
     </div>
 
     <div>
       <div class="model-box">
-        <h3>LLM 모델 선정</h3>
+        <h3><span data-ko>LLM 모델 선정</span><span data-en>LLM Model Selection</span></h3>
         <div class="model-selected">✓ Selected: GPT-4o-mini</div>
 
         <table class="model-table">
           <thead>
             <tr>
-              <th>모델</th>
-              <th>장점</th>
-              <th>단점</th>
-              <th>채택</th>
+              <th><span data-ko>모델</span><span data-en>Model</span></th>
+              <th><span data-ko>장점</span><span data-en>Pros</span></th>
+              <th><span data-ko>단점</span><span data-en>Cons</span></th>
+              <th><span data-ko>채택</span><span data-en>Status</span></th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>GPT-4</td>
-              <td>최고 수준 품질</td>
-              <td>높은 비용, 느린 속도</td>
-              <td><span class="badge-no">미채택</span></td>
+              <td><span data-ko>최고 수준 품질</span><span data-en>Top-tier quality</span></td>
+              <td><span data-ko>높은 비용, 느린 속도</span><span data-en>High cost, slow speed</span></td>
+              <td><span class="badge-no"><span data-ko>미채택</span><span data-en>Rejected</span></span></td>
             </tr>
             <tr>
               <td>GPT-4o</td>
-              <td>매우 빠른 응답</td>
-              <td>토큰 비용 증가</td>
-              <td><span class="badge-no">미채택</span></td>
+              <td><span data-ko>매우 빠른 응답</span><span data-en>Very fast response</span></td>
+              <td><span data-ko>토큰 비용 증가</span><span data-en>Increased token cost</span></td>
+              <td><span class="badge-no"><span data-ko>미채택</span><span data-en>Rejected</span></span></td>
             </tr>
             <tr class="adopted">
               <td>GPT-4o-mini</td>
-              <td>비용·속도·품질 균형</td>
-              <td>최고급 품질은 아님</td>
-              <td><span class="badge-adopted">채택 ✓</span></td>
+              <td><span data-ko>비용·속도·품질 균형</span><span data-en>Balanced cost/speed/quality</span></td>
+              <td><span data-ko>최고급 품질은 아님</span><span data-en>Not top-tier quality</span></td>
+              <td><span class="badge-adopted"><span data-ko>채택 ✓</span><span data-en>Adopted ✓</span></span></td>
             </tr>
           </tbody>
         </table>
@@ -733,7 +741,7 @@
         </div>
 
         <div class="arch-row">
-          <h4>기술 스택</h4>
+          <h4><span data-ko>기술 스택</span><span data-en>Tech Stack</span></h4>
           <div class="arch-tier-row">
             <div class="arch-label">FRONTEND</div>
             <div class="arch-tech"><span>Vanilla JS</span><span>MediaDevices API</span></div>
@@ -763,43 +771,91 @@
 <!-- IMPACT -->
 <section id="impact">
   <div class="section-label">04 · Impact & Role</div>
-  <h2 class="section-title">프로젝트 성과 &<br>기획 역할</h2>
+  <h2 class="section-title">
+    <span data-ko>프로젝트 성과 &<br>기획 역할</span>
+    <span data-en>Project Impact &<br>Planning Role</span>
+  </h2>
 
   <div class="stats-row reveal">
     <div class="stat-cell">
       <div class="big">RAG</div>
-      <div class="label">초개인화 추천<br>4단계 파이프라인</div>
+      <div class="label">
+        <span data-ko>초개인화 추천<br>4단계 파이프라인</span>
+        <span data-en>Hyper-Personalized<br>4-Step Pipeline</span>
+      </div>
     </div>
     <div class="stat-cell">
       <div class="big purple">OCR</div>
-      <div class="label">+LLM 통합<br>자간 병합 해결</div>
+      <div class="label">
+        <span data-ko>+LLM 통합<br>자간 병합 해결</span>
+        <span data-en>+LLM Integration<br>Spacing Issue Solved</span>
+      </div>
     </div>
     <div class="stat-cell">
       <div class="big green">4</div>
-      <div class="label">K-콘텐츠 카테고리<br>K-POP·드라마·예능·영화</div>
+      <div class="label">
+        <span data-ko>K-콘텐츠 카테고리<br>K-POP·드라마·예능·영화</span>
+        <span data-en>K-Content Categories<br>K-POP·Drama·Variety·Film</span>
+      </div>
     </div>
     <div class="stat-cell">
       <div class="big pink">FIT</div>
-      <div class="label">외국인 자유여행객<br>UX 최적화</div>
+      <div class="label">
+        <span data-ko>외국인 자유여행객<br>UX 최적화</span>
+        <span data-en>Foreign Independent<br>Traveler UX-Optimized</span>
+      </div>
     </div>
   </div>
 
   <div class="role-grid reveal">
     <div class="role-card">
-      <h3>👩‍💼 기획 역할 (Planning Role)</h3>
-      <div class="role-item"><div class="role-dot"></div>서비스 기획 및 핵심 기능 설계</div>
-      <div class="role-item"><div class="role-dot"></div>프론트엔드 UI/UX 구조 및 사용자 흐름 설계</div>
-      <div class="role-item"><div class="role-dot"></div>서비스 시나리오 영상 기획</div>
-      <div class="role-item"><div class="role-dot"></div>아키텍처 및 Azure 기반 개발 협업·기술 스택 조율</div>
-      <div class="role-item"><div class="role-dot"></div>외국인 UX 최적화를 위한 인터페이스 설계</div>
+      <h3>
+        <span data-ko>👩‍💼 기획 역할 (Planning Role)</span>
+        <span data-en>👩‍💼 Planning Role</span>
+      </h3>
+      <div class="role-item"><div class="role-dot"></div>
+        <span data-ko>서비스 기획 및 핵심 기능 설계</span>
+        <span data-en>Service planning and core feature design</span>
+      </div>
+      <div class="role-item"><div class="role-dot"></div>
+        <span data-ko>프론트엔드 UI/UX 구조 및 사용자 흐름 설계</span>
+        <span data-en>Frontend UI/UX structure and user flow design</span>
+      </div>
+      <div class="role-item"><div class="role-dot"></div>
+        <span data-ko>서비스 시나리오 영상 기획</span>
+        <span data-en>Service scenario video planning</span>
+      </div>
+      <div class="role-item"><div class="role-dot"></div>
+        <span data-ko>아키텍처 및 Azure 기반 개발 협업·기술 스택 조율</span>
+        <span data-en>Architecture and Azure-based development collaboration & tech stack coordination</span>
+      </div>
+      <div class="role-item"><div class="role-dot"></div>
+        <span data-ko>외국인 UX 최적화를 위한 인터페이스 설계</span>
+        <span data-en>Interface design optimized for foreign user UX</span>
+      </div>
     </div>
 
     <div class="role-card">
-      <h3>🏆 핵심 성과 요약</h3>
-      <div class="role-item"><div class="role-dot"></div>RAG 기반 초개인화 K-콘텐츠 여행 추천 구현</div>
-      <div class="role-item"><div class="role-dot"></div>OCR 자간 인식 문제 → 좌표 기반 알고리즘으로 해결</div>
-      <div class="role-item"><div class="role-dot"></div>단순 텍스트 컨텍스트 → Key-Value JSON 구조화로 추천 정확도 향상</div>
-      <div class="role-item"><div class="role-dot"></div>비용·속도·품질 균형 모델(GPT-4o-mini) 선정 프레임 설계</div>
+      <h3>
+        <span data-ko>🏆 핵심 성과 요약</span>
+        <span data-en>🏆 Key Achievements</span>
+      </h3>
+      <div class="role-item"><div class="role-dot"></div>
+        <span data-ko>RAG 기반 초개인화 K-콘텐츠 여행 추천 구현</span>
+        <span data-en>Implemented RAG-based hyper-personalized K-content travel recommendations</span>
+      </div>
+      <div class="role-item"><div class="role-dot"></div>
+        <span data-ko>OCR 자간 인식 문제 → 좌표 기반 알고리즘으로 해결</span>
+        <span data-en>Resolved OCR character spacing issues with coordinate-based algorithm</span>
+      </div>
+      <div class="role-item"><div class="role-dot"></div>
+        <span data-ko>단순 텍스트 컨텍스트 → Key-Value JSON 구조화로 추천 정확도 향상</span>
+        <span data-en>Improved recommendation accuracy by converting plain text context to Key-Value JSON</span>
+      </div>
+      <div class="role-item"><div class="role-dot"></div>
+        <span data-ko>비용·속도·품질 균형 모델(GPT-4o-mini) 선정 프레임 설계</span>
+        <span data-en>Designed cost-speed-quality balance framework for model selection (GPT-4o-mini)</span>
+      </div>
     </div>
   </div>
 </section>
@@ -809,20 +865,24 @@
   <div class="section-label">05 · About</div>
   <div class="about-grid">
     <div>
-      <div class="about-name">박소현</div>
-      <div class="about-role">AI PRODUCT PLANNER</div>
+      <div class="about-name">
+        <span data-ko>박소현</span>
+        <span data-en>Sohyeon Park</span>
+      </div>
+      <div class="about-role-label">AI PRODUCT PLANNER</div>
       <p class="about-text">
-        K-콘텐츠를 사랑하는 외국인 관광객의 불편을 해결하고자 KTrip을 기획했습니다. 단순 번역 앱이 아닌, 콘텐츠 취향을 이해하고 언어 장벽을 기술로 허무는 AI 여행 가이드를 설계했습니다. OCR 자간 문제를 좌표 알고리즘으로 해결하고, RAG 컨텍스트를 JSON 구조화로 개선하는 과정에서 기술과 기획의 연결 지점을 직접 경험했습니다.
+        <span data-ko>K-콘텐츠를 사랑하는 외국인 관광객의 불편을 해결하고자 KTrip을 기획했습니다. 단순 번역 앱이 아닌, 콘텐츠 취향을 이해하고 언어 장벽을 기술로 허무는 AI 여행 가이드를 설계했습니다. OCR 자간 문제를 좌표 알고리즘으로 해결하고, RAG 컨텍스트를 JSON 구조화로 개선하는 과정에서 기술과 기획의 연결 지점을 직접 경험했습니다.</span>
+        <span data-en>I conceived KTrip to solve the friction faced by foreign tourists who love K-content. Rather than a simple translation app, I designed an AI travel guide that understands content preferences and dismantles language barriers through technology. Resolving OCR spacing issues with coordinate algorithms and improving RAG context through JSON structuring taught me firsthand how planning and engineering intersect.</span>
       </p>
       <div class="skill-chips">
         <span class="chip">AI Product Planning</span>
-        <span class="chip">RAG 파이프라인</span>
-        <span class="chip">UX Flow 설계</span>
+        <span class="chip"><span data-ko>RAG 파이프라인</span><span data-en>RAG Pipeline</span></span>
+        <span class="chip"><span data-ko>UX Flow 설계</span><span data-en>UX Flow Design</span></span>
         <span class="chip">OCR + LLM</span>
         <span class="chip">Azure OpenAI</span>
         <span class="chip">TravelTech</span>
-        <span class="chip">외국인 UX</span>
-        <span class="chip">IA 설계</span>
+        <span class="chip"><span data-ko>외국인 UX</span><span data-en>FIT UX</span></span>
+        <span class="chip"><span data-ko>IA 설계</span><span data-en>IA Design</span></span>
       </div>
     </div>
 
@@ -830,22 +890,40 @@
       <div class="h-card">
         <div class="h-icon">🎬</div>
         <div class="h-content">
-          <h4>K-콘텐츠 취향을 여행 경로로 전환</h4>
-          <p>드라마 촬영지·아이돌 활동지 등 콘텐츠 스토리를 RAG 파이프라인으로 연결해 "덕질 여행"을 체계적으로 설계할 수 있는 서비스를 기획했습니다.</p>
+          <h4>
+            <span data-ko>K-콘텐츠 취향을 여행 경로로 전환</span>
+            <span data-en>Turning K-Content Taste Into Routes</span>
+          </h4>
+          <p>
+            <span data-ko>드라마 촬영지·아이돌 활동지 등 콘텐츠 스토리를 RAG 파이프라인으로 연결해 "덕질 여행"을 체계적으로 설계할 수 있는 서비스를 기획했습니다.</span>
+            <span data-en>Connected drama filming locations, idol activity sites, and other content stories via RAG pipeline — designing a service that makes fandom-driven travel systematic and seamless.</span>
+          </p>
         </div>
       </div>
       <div class="h-card">
         <div class="h-icon">🔧</div>
         <div class="h-content">
-          <h4>기술 문제를 기획으로 정의하고 해결</h4>
-          <p>OCR 자간 인식 오류를 좌표 알고리즘으로, RAG 추천 정확도 문제를 JSON 구조화로 해결하는 과정을 기획 단계에서 먼저 정의하고 개발팀과 협력했습니다.</p>
+          <h4>
+            <span data-ko>기술 문제를 기획으로 정의하고 해결</span>
+            <span data-en>Defining Technical Problems Through Planning</span>
+          </h4>
+          <p>
+            <span data-ko>OCR 자간 인식 오류를 좌표 알고리즘으로, RAG 추천 정확도 문제를 JSON 구조화로 해결하는 과정을 기획 단계에서 먼저 정의하고 개발팀과 협력했습니다.</span>
+            <span data-en>Defined the OCR character spacing fix (coordinate algorithm) and RAG accuracy improvement (JSON structuring) at the planning stage, then collaborated with the dev team to execute.</span>
+          </p>
         </div>
       </div>
       <div class="h-card">
         <div class="h-icon">⚖️</div>
         <div class="h-content">
-          <h4>비용·속도·품질의 트레이드오프 설계</h4>
-          <p>GPT-4 vs GPT-4o-mini 비교 프레임을 직접 설계하고, 비용 효율과 서비스 품질의 균형점을 찾아 GPT-4o-mini를 메인 모델로 선정했습니다.</p>
+          <h4>
+            <span data-ko>비용·속도·품질의 트레이드오프 설계</span>
+            <span data-en>Designing the Cost-Speed-Quality Tradeoff</span>
+          </h4>
+          <p>
+            <span data-ko>GPT-4 vs GPT-4o-mini 비교 프레임을 직접 설계하고, 비용 효율과 서비스 품질의 균형점을 찾아 GPT-4o-mini를 메인 모델로 선정했습니다.</span>
+            <span data-en>Personally designed the GPT-4 vs GPT-4o-mini comparison framework and identified the optimal balance between cost efficiency and service quality — selecting GPT-4o-mini as the primary model.</span>
+          </p>
         </div>
       </div>
     </div>
@@ -855,17 +933,54 @@
 <footer>
   <div class="footer-logo">K<span>Trip</span></div>
   <div class="footer-meta">
-    TravelTech AI Portfolio · 박소현<br>
+    <span data-ko>TravelTech AI Portfolio · 박소현</span>
+    <span data-en>TravelTech AI Portfolio · Sohyeon Park</span>
+    <br>
     <span style="font-size:0.6rem;opacity:0.5;">Azure OpenAI · GPT-4o-mini · Azure Document Intelligence · FastAPI · RAG</span>
   </div>
   <div class="footer-links">
-    <a href="#hero">↑ 맨 위로</a>
-    <a href="#background">기획배경</a>
-    <a href="#tech">기술챌린지</a>
+    <a href="#hero">
+      <span data-ko>↑ 맨 위로</span>
+      <span data-en>↑ Top</span>
+    </a>
+    <a href="#background">
+      <span data-ko>기획배경</span>
+      <span data-en>Context</span>
+    </a>
+    <a href="#tech">
+      <span data-ko>기술챌린지</span>
+      <span data-en>Challenges</span>
+    </a>
   </div>
 </footer>
 
 <script>
+  // ── LANGUAGE TOGGLE ──
+  const toggle = document.getElementById('langToggle');
+  const labelKo = document.getElementById('labelKo');
+  const labelEn = document.getElementById('labelEn');
+  let isEn = false;
+
+  function setLang(en) {
+    isEn = en;
+    if (en) {
+      document.body.classList.add('lang-en');
+      document.documentElement.lang = 'en';
+      document.title = 'KTrip — Sohyeon Park | AI Product Planner';
+      labelKo.classList.remove('active');
+      labelEn.classList.add('active');
+    } else {
+      document.body.classList.remove('lang-en');
+      document.documentElement.lang = 'ko';
+      document.title = 'KTrip — 박소현 AI 프로덕트 기획자';
+      labelKo.classList.add('active');
+      labelEn.classList.remove('active');
+    }
+  }
+
+  toggle.addEventListener('click', () => setLang(!isEn));
+
+  // ── SCROLL REVEAL ──
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
@@ -874,6 +989,7 @@
   }, { threshold: 0.1 });
   reveals.forEach(el => observer.observe(el));
 
+  // ── ACTIVE NAV ──
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-links a');
   window.addEventListener('scroll', () => {
